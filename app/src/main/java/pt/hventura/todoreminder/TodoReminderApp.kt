@@ -10,12 +10,14 @@ import pt.hventura.todoreminder.locationreminders.data.local.LocalDB
 import pt.hventura.todoreminder.locationreminders.data.local.RemindersLocalRepository
 import pt.hventura.todoreminder.locationreminders.reminderslist.RemindersListViewModel
 import pt.hventura.todoreminder.locationreminders.savereminder.SaveReminderViewModel
+import pt.hventura.todoreminder.utils.PreferencesManager
 import timber.log.Timber
 
-class MyApp : Application() {
+class TodoReminderApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
+        PreferencesManager.with(this)
 
         /**
          * use Koin Library as a service locator
@@ -37,11 +39,11 @@ class MyApp : Application() {
                 )
             }
             single { RemindersLocalRepository(get()) as ReminderDataSource }
-            single { LocalDB.createRemindersDao(this@MyApp) }
+            single { LocalDB.createRemindersDao(this@TodoReminderApp) }
         }
 
         startKoin {
-            androidContext(this@MyApp)
+            androidContext(this@TodoReminderApp)
             modules(listOf(myModule))
         }
 

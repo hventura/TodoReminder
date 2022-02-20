@@ -19,9 +19,42 @@
         <entry key="..\:/Users/hvent/Desktop/androidProjects/TodoReminder/app/src/main/res/menu/main_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/hvent/Desktop/androidProjects/TodoReminder/app/src/main/res/menu/map_ooptions.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/hvent/Desktop/androidProjects/TodoReminderInit/app/src/main/res/layout/activity_main.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/custom_button.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/custom_button_borderless.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_add.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_email.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_google.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_launcher_background.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_location.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_marker.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_menu_camera.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_no_data.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/ic_save.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/login_background_gradient.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/login_box.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/drawable/side_nav_bar.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout-land/activity_authentication.xml" value="0.25" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout-land/activity_authentication_login.xml" value="0.25" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout/activity_authentication.xml" value="0.25" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout/activity_authentication_login.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout/activity_reminders.xml" value="0.18020833333333333" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout/fragment_reminder_list.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout/fragment_save_reminder.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout/fragment_select_location.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout/horizontal_spacer_auth.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/layout/item_reminder.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/menu/main_menu.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/menu/map_options.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.307" />
+        <entry key="..\:/Users/hvent/Desktop/nanodegreeKotlin/Part5/TodoReminder/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.307" />
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

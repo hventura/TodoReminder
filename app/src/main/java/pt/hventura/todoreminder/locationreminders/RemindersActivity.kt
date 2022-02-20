@@ -1,11 +1,14 @@
 package pt.hventura.todoreminder.locationreminders
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import pt.hventura.todoreminder.R
+import pt.hventura.todoreminder.authentication.AuthenticationActivity
 import pt.hventura.todoreminder.databinding.ActivityRemindersBinding
 
 class RemindersActivity : AppCompatActivity() {
@@ -22,6 +25,11 @@ class RemindersActivity : AppCompatActivity() {
             android.R.id.home -> {
                 findNavController(R.id.nav_host_fragment).popBackStack()
                 return true
+            }
+            R.id.logout -> {
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this, AuthenticationActivity::class.java))
+                finish()
             }
         }
         return super.onOptionsItemSelected(item)

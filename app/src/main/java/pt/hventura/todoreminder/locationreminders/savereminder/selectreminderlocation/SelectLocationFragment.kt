@@ -1,13 +1,20 @@
 package pt.hventura.todoreminder.locationreminders.savereminder.selectreminderlocation
 
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.android.ext.android.inject
 import pt.hventura.todoreminder.R
@@ -15,6 +22,8 @@ import pt.hventura.todoreminder.base.BaseFragment
 import pt.hventura.todoreminder.databinding.FragmentSelectLocationBinding
 import pt.hventura.todoreminder.locationreminders.savereminder.SaveReminderViewModel
 import pt.hventura.todoreminder.utils.setDisplayHomeAsUpEnabled
+import java.io.FileOutputStream
+import java.util.*
 
 class SelectLocationFragment : BaseFragment() {
 
@@ -25,16 +34,15 @@ class SelectLocationFragment : BaseFragment() {
 
     private val callback = OnMapReadyCallback { googleMap ->
         map = googleMap
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        map.setPadding(5, 0, 5, 70)
+        setMapStyle(map)
+        setOnPoiClick(map)
+        setOnMapClick(map)
+        val coimbra = LatLng(40.203348, -8.410291)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coimbra, 14F))
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(
             layoutInflater,
             R.layout.fragment_select_location,
@@ -92,6 +100,101 @@ class SelectLocationFragment : BaseFragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    /**
+     * Ensures that the style is applied and changed accordingly with hour of day
+     * This logic can be enhanced given the TimeZone and/or through User configuration
+     * For now lets keep it simple and say that from 19h forward is night time :P
+     **/
+    private fun setMapStyle(map: GoogleMap) {
+        mViewModel.hourOfDay.observe(this.viewLifecycleOwner) { hour ->
+            try {
+                val successMapStyle = if (hour < 19) {
+                    map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_day))
+                } else {
+                    map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_night))
+                }
+
+                if (!successMapStyle) {
+                    mViewModel.showErrorMessage.value = "Something went wrong with the Map Style. Contact support and provide this error"
+                }
+
+            } catch (e: Resources.NotFoundException) {
+                mViewModel.showErrorMessage.value = "Can't find the style. Error: ${e.message}"
+            }
+        }
+    }
+
+    private fun setOnPoiClick(map: GoogleMap) {
+        map.setOnPoiClickListener { poi ->
+            map.clear()
+            mViewModel.selectedLocation.value = null
+            mViewModel.selectedPOI.value = poi
+            val selectedPoi = map.addMarker(
+                MarkerOptions().position(poi.latLng)
+                    .title(poi.name)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+            )
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(poi.latLng, 16f), object : GoogleMap.CancelableCallback {
+                override fun onCancel() {}
+
+                override fun onFinish() {
+                    captureMapScreen()
+                    selectedPoi?.showInfoWindow()
+                }
+            })
+        }
+    }
+
+    private fun setOnMapClick(map: GoogleMap) {
+        map.setOnMapClickListener { latLng ->
+            map.clear()
+            mViewModel.selectedLocation.value = latLng
+            mViewModel.selectedPOI.value = null
+            val snippet = String.format(
+                Locale.getDefault(),
+                "Lat: %1.5f, Long: %2.5f",
+                latLng.latitude, latLng.longitude
+            )
+            val selectedLocation = map.addMarker(
+                MarkerOptions().position(latLng)
+                    .title(getString(R.string.dropped_pin))
+                    .snippet(snippet)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
+            )
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f), object : GoogleMap.CancelableCallback {
+                override fun onCancel() {}
+
+                override fun onFinish() {
+                    captureMapScreen()
+                    selectedLocation!!.showInfoWindow()
+                }
+            })
+        }
+    }
+
+    private fun captureMapScreen() {
+        val callback: SnapshotReadyCallback = object : SnapshotReadyCallback {
+            var bitmap: Bitmap? = null
+            override fun onSnapshotReady(snapshot: Bitmap?) {
+                bitmap = snapshot
+                try {
+                    // https://stackoverflow.com/questions/5527764/get-application-directory
+                    val packageManager: PackageManager = requireActivity().packageManager
+                    val packageName: String = requireActivity().packageName
+                    val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+                    val packageDir: String = packageInfo.applicationInfo.dataDir
+                    mViewModel.reminderSnapshotLocation.value = packageDir + "/" + System.currentTimeMillis() + ".png"
+
+                    val out = FileOutputStream(mViewModel.reminderSnapshotLocation.value)
+                    bitmap!!.compress(Bitmap.CompressFormat.PNG, 90, out)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        map.snapshot(callback)
     }
 
 }

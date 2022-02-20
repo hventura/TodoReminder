@@ -9,7 +9,7 @@
         android:id="@+id/reminderListFragment"
         android:name="pt.hventura.todoreminder.locationreminders.reminderslist.ReminderListFragment"
         android:label="ReminderListFragment"
-        tools:layout="@layout/fragment_reminder_list" >
+        tools:layout="@layout/fragment_reminder_list">
         <action
             android:id="@+id/action_reminderListFragment_to_saveReminderFragment"
             app:destination="@id/saveReminderFragment" />

@@ -3,8 +3,10 @@ package pt.hventura.todoreminder.locationreminders.savereminder
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
 import pt.hventura.todoreminder.R
 import pt.hventura.todoreminder.base.BaseViewModel
 import pt.hventura.todoreminder.base.NavigationCommand
@@ -17,12 +19,15 @@ class SaveReminderViewModel(
     val dataSource: ReminderDataSource
 ) : BaseViewModel(app) {
 
+    var hourOfDay = MutableLiveData(DateTime().hourOfDay)
     val reminderTitle = MutableLiveData<String?>()
     val reminderDescription = MutableLiveData<String?>()
     val reminderSelectedLocationStr = MutableLiveData<String?>()
+    val selectedLocation = MutableLiveData<LatLng?>()
     val selectedPOI = MutableLiveData<PointOfInterest?>()
     val latitude = MutableLiveData<Double?>()
     val longitude = MutableLiveData<Double?>()
+    val reminderSnapshotLocation = MutableLiveData<String?>()
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called

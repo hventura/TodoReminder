@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">Todo Reminder</string>
 
-    <string name="welcome_to_the_location_reminder_app">Welcome to the location reminder app</string>
+    <!-- Welcome & Login -->
     <string name="welcome">Welcome</string>
+    <string name="welcome_title_app">Todo reminder App</string>
+    <string name="welcome_title_description">Never forget what TODO and WHERE to go next!</string>
+    <string name="welcome_login_button">Login</string>
+    <string name="logged_in_user">Hello, %1$s</string>
+    <string name="login_choose_text">Please choose login method!</string>
+
     <string name="reminder_title">Reminder Title</string>
     <string name="reminder_desc">Description</string>
     <string name="reminder_location">Reminder Location</string>
@@ -16,18 +22,23 @@
     <string name="satellite_map">Satellite Map</string>
     <string name="terrain_map">Terrain Map</string>
     <string name="lat_long_snippet">Lat: %1$.5f, Long: %2$.5f</string>
-    <string name="dropped_pin">Dropped Pin</string>
-    <string name="poi">poi</string>
+    <string name="dropped_pin">Custom Location</string>
+    <string name="dropped_poi">POI Selected</string>
+    <string name="select_poi_location">Please select a point of interest or any location</string>
     <string name="location_required_error">Location services must be enabled to use the app</string>
-    <string name="permission_denied_explanation">You need to grant location permission in order to select the location.</string>
+    <string name="permission_denied_explanation">You need to grant location permission in order to select the location. Please open settings screen to modify app permissions</string>
+    <string name="select_location_confirm_button">Confirm</string>
+    <string name="detail_reminder_back">Back</string>
+    <string name="latitude">Latitude:</string>
+    <string name="longitude">Longitude:</string>
     <string name="settings">Settings</string>
-    <string name="select_poi">Please select a point of interest</string>
     <string name="geofence_entered">Geofence Entered</string>
     <string name="channel_name">GeofenceStatus</string>
     <string name="notification_channel_description">Geofence status notification</string>
     <string name="content_text">Location Reminder</string>
     <string name="select_title">Please select title</string>
     <string name="select_location">Please select location</string>
+    <string name="icons_attribution"><a href="https://www.freepik.com/vectors/design">Design vector created by freepik - www.freepik.com</a></string>
 
     <!-- Error strings -->
     <string name="error_happened">Error happened</string>
@@ -40,8 +51,7 @@
     <string name="geofences_not_added">Problem in adding geofences.</string>
     <string name="error_adding_geofence">Error Happened, Can\'t Add Geofence</string>
     <string name="err_enter_title">Please enter title</string>
+    <string name="err_no_title">Please go back and provide a title to your Reminder</string>
     <string name="err_select_location">Please select location</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

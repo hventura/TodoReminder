@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_dark_background"
+    android:orientation="horizontal"
+    android:weightSum="2">
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.7">
+
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_marker"
+            app:tint="@color/md_theme_light_secondaryContainer" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.3"
+        android:orientation="vertical">
+
+        <include layout="@layout/horizontal_spacer_auth" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_with_email"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/custom_button"
+            android:drawableStart="@drawable/ic_email"
+            android:paddingStart="10dp"
+            android:text="@string/fui_idp_name_email"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_spacer" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_with_google"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_small"
+            android:background="@drawable/custom_button"
+            android:drawableStart="@drawable/ic_google"
+            android:paddingStart="10dp"
+            android:text="@string/fui_idp_name_google"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/login_with_email" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/md_theme_dark_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Idea taken from Firebase UI Sample APP! :) looked nice and clean -->
+    <FrameLayout
+        android:id="@+id/spacer_left"
+        style="@style/CustomWingOuter"
+        app:layout_constraintBottom_toBottomOf="@id/centerText"
+        app:layout_constraintEnd_toStartOf="@id/centerText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/centerText">
+
+        <View style="@style/CustomWingInner" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/centerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_choose_text"
+        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toStartOf="@+id/spacer_right"
+        app:layout_constraintStart_toEndOf="@+id/spacer_left"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/spacer_right"
+        style="@style/CustomWingOuter"
+        app:layout_constraintBottom_toBottomOf="@id/centerText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/centerText"
+        app:layout_constraintTop_toTopOf="@id/centerText">
+
+        <View style="@style/CustomWingInner" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

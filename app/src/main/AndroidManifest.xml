@@ -9,13 +9,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".MyApp"
+        android:name=".TodoReminderApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TodoReminder">
+        android:theme="@style/TodoReminderTheme">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -23,13 +23,18 @@
 
         <activity
             android:name=".locationreminders.ReminderDescriptionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".authentication.AuthenticationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/TodoReminderTheme" />
+
         <activity
             android:name=".locationreminders.RemindersActivity"
-            android:exported="true">
+            android:exported="false"
+            android:theme="@style/TodoReminderTheme" />
+
+        <activity
+            android:name=".authentication.AuthenticationActivity"
+            android:exported="true"
+            android:theme="@style/TodoReminderTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,7 +45,7 @@
         <receiver
             android:name=".locationreminders.geofence.GeofenceBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
         <service
             android:name=".locationreminders.geofence.GeofenceTransitionsJobIntentService"
             android:exported="true"

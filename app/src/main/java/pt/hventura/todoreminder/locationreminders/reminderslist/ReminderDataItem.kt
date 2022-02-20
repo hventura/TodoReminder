@@ -12,5 +12,14 @@ data class ReminderDataItem(
     var location: String?,
     var latitude: Double?,
     var longitude: Double?,
+    var snapshot: String?,
     val id: String = UUID.randomUUID().toString()
-) : Serializable
+) : Serializable {
+    fun getStringLatitude(): String {
+        return String.format("%.5f", latitude)
+    }
+
+    fun getStringLongitude(): String {
+        return String.format("%.5f", longitude)
+    }
+}

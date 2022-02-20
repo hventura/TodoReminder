@@ -1,10 +1,13 @@
 package pt.hventura.todoreminder.locationreminders.reminderslist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import com.firebase.ui.auth.AuthUI
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pt.hventura.todoreminder.R
+import pt.hventura.todoreminder.authentication.AuthenticationActivity
 import pt.hventura.todoreminder.base.BaseFragment
 import pt.hventura.todoreminder.base.NavigationCommand
 import pt.hventura.todoreminder.databinding.FragmentReminderListBinding
@@ -22,12 +25,7 @@ class ReminderListFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(
-            layoutInflater,
-            R.layout.fragment_reminder_list,
-            container,
-            false
-        )
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_reminder_list, container, false)
         binding.viewModel = mViewModel
 
         setHasOptionsMenu(true)
@@ -74,7 +72,12 @@ class ReminderListFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout -> {
-//                TODO: add the logout implementation
+                AuthUI.getInstance()
+                    .signOut(requireContext())
+                    .addOnCompleteListener {
+                        startActivity(Intent(requireActivity(), AuthenticationActivity::class.java))
+                        requireActivity().finish()
+                    }
             }
         }
         return super.onOptionsItemSelected(item)
