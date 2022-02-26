@@ -12,14 +12,13 @@ import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import pt.hventura.todoreminder.R
+import pt.hventura.todoreminder.authentication.data.UserData
 import pt.hventura.todoreminder.databinding.ActivityAuthenticationBinding
 import pt.hventura.todoreminder.locationreminders.RemindersActivity
+import pt.hventura.todoreminder.utils.Constants.SIGN_IN_REQUEST_CODE
+import pt.hventura.todoreminder.utils.PreferencesManager
 
 class AuthenticationActivity : AppCompatActivity() {
-
-    companion object {
-        const val SIGN_IN_REQUEST_CODE = 1001
-    }
 
     private lateinit var binding: ActivityAuthenticationBinding
     private lateinit var viewModel: AuthenticationViewModel
@@ -31,9 +30,23 @@ class AuthenticationActivity : AppCompatActivity() {
         window.setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication)
-        viewModel =
-            ViewModelProvider(this)[AuthenticationViewModel::class.java] // No need for injection here
+        viewModel = ViewModelProvider(this)[AuthenticationViewModel::class.java] // No need for injection here
 
+        if (PreferencesManager.retrieve<UserData>("userData") != null) {
+            startActivity(Intent(this, RemindersActivity::class.java))
+            overridePendingTransition(0, 0)
+            finish()
+        } else {
+            initializeObservables()
+        }
+
+        binding.login.setOnClickListener {
+            startLoginFlow()
+        }
+
+    }
+
+    private fun initializeObservables() {
         viewModel.authenticationState.observe(this) { authenticationState ->
             when (authenticationState) {
                 AuthenticationViewModel.AuthenticationState.AUTHENTICATED -> {
@@ -45,6 +58,7 @@ class AuthenticationActivity : AppCompatActivity() {
                     binding.loggedInUser.visibility = View.VISIBLE
                     Handler().postDelayed({
                         startActivity(Intent(this, RemindersActivity::class.java))
+                        overridePendingTransition(0, 0)
                         finish() // Finish current AuthenticationActivity
                     }, 3000)
                 }
@@ -54,11 +68,6 @@ class AuthenticationActivity : AppCompatActivity() {
                 }
             }
         }
-
-        binding.login.setOnClickListener {
-            startLoginFlow()
-        }
-
     }
 
     private fun startLoginFlow() {

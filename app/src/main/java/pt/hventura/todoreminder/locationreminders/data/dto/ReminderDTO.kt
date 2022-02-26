@@ -14,6 +14,7 @@ import java.util.*
  * @param location      location name of the reminder
  * @param latitude      latitude of the reminder location
  * @param longitude     longitude of the reminder location
+ * @param snapshot      location of small snapshot of reminder location
  * @param id            id of the reminder
  */
 @Entity(tableName = "reminders")

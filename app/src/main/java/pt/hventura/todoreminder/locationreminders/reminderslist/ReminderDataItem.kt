@@ -22,4 +22,8 @@ data class ReminderDataItem(
     fun getStringLongitude(): String {
         return String.format("%.5f", longitude)
     }
+
+    fun getStringLocation(): String {
+        return "${String.format("%.3f", latitude)} | ${String.format("%.3f", longitude)}"
+    }
 }

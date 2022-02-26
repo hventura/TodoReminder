@@ -6,7 +6,7 @@
     <string name="welcome_title_app">Todo reminder App</string>
     <string name="welcome_title_description">Never forget what TODO and WHERE to go next!</string>
     <string name="welcome_login_button">Login</string>
-    <string name="logged_in_user">Hello, %1$s</string>
+    <string name="logged_in_user">Hello, %s</string><!-- for more than one variables %1$s %2$s, etc -->
     <string name="login_choose_text">Please choose login method!</string>
 
     <string name="reminder_title">Reminder Title</string>

@@ -3,7 +3,6 @@ package pt.hventura.todoreminder.locationreminders.savereminder
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
@@ -14,16 +13,12 @@ import pt.hventura.todoreminder.locationreminders.data.ReminderDataSource
 import pt.hventura.todoreminder.locationreminders.data.dto.ReminderDTO
 import pt.hventura.todoreminder.locationreminders.reminderslist.ReminderDataItem
 
-class SaveReminderViewModel(
-    val app: Application,
-    val dataSource: ReminderDataSource
-) : BaseViewModel(app) {
+class SaveReminderViewModel(val app: Application, private val dataSource: ReminderDataSource) : BaseViewModel(app) {
 
     var hourOfDay = MutableLiveData(DateTime().hourOfDay)
     val reminderTitle = MutableLiveData<String?>()
     val reminderDescription = MutableLiveData<String?>()
     val reminderSelectedLocationStr = MutableLiveData<String?>()
-    val selectedLocation = MutableLiveData<LatLng?>()
     val selectedPOI = MutableLiveData<PointOfInterest?>()
     val latitude = MutableLiveData<Double?>()
     val longitude = MutableLiveData<Double?>()
@@ -32,22 +27,25 @@ class SaveReminderViewModel(
     /**
      * Clear the live data objects to start fresh next time the view model gets called
      */
-    fun onClear() {
+    fun resetData() {
         reminderTitle.value = null
         reminderDescription.value = null
         reminderSelectedLocationStr.value = null
         selectedPOI.value = null
         latitude.value = null
         longitude.value = null
+        reminderSnapshotLocation.value = null
     }
 
     /**
      * Validate the entered data then saves the reminder data to the DataSource
      */
-    fun validateAndSaveReminder(reminderData: ReminderDataItem) {
+    fun validateAndSaveReminder(reminderData: ReminderDataItem): Boolean {
         if (validateEnteredData(reminderData)) {
             saveReminder(reminderData)
+            return true
         }
+        return false
     }
 
     /**
@@ -68,6 +66,7 @@ class SaveReminderViewModel(
             )
             showLoading.value = false
             showToast.value = app.getString(R.string.reminder_saved)
+            resetData()
             navigationCommand.value = NavigationCommand.Back
         }
     }
@@ -86,5 +85,10 @@ class SaveReminderViewModel(
             return false
         }
         return true
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        resetData()
     }
 }

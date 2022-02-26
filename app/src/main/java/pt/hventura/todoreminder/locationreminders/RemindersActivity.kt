@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth
 import pt.hventura.todoreminder.R
 import pt.hventura.todoreminder.authentication.AuthenticationActivity
 import pt.hventura.todoreminder.databinding.ActivityRemindersBinding
+import pt.hventura.todoreminder.utils.PreferencesManager
+import timber.log.Timber
 
 class RemindersActivity : AppCompatActivity() {
 
@@ -27,11 +29,20 @@ class RemindersActivity : AppCompatActivity() {
                 return true
             }
             R.id.logout -> {
+                PreferencesManager.put(null, "userData")
                 FirebaseAuth.getInstance().signOut()
                 startActivity(Intent(this, AuthenticationActivity::class.java))
+                overridePendingTransition(0, 0)
                 finish()
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
 }

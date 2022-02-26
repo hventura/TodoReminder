@@ -12,27 +12,25 @@ import pt.hventura.todoreminder.base.BaseFragment
 import pt.hventura.todoreminder.base.NavigationCommand
 import pt.hventura.todoreminder.databinding.FragmentReminderListBinding
 import pt.hventura.todoreminder.utils.setDisplayHomeAsUpEnabled
-import pt.hventura.todoreminder.utils.setTitle
 import pt.hventura.todoreminder.utils.setup
 
 class ReminderListFragment : BaseFragment() {
     // Using Koin to retrieve the ViewModel instance
-    override val mViewModel: RemindersListViewModel by viewModel()
+    override val viewModel: RemindersListViewModel by viewModel()
 
     private lateinit var binding: FragmentReminderListBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_reminder_list, container, false)
-        binding.viewModel = mViewModel
+        binding.viewModel = viewModel
 
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(false)
-        setTitle(getString(R.string.app_name))
 
-        binding.refreshLayout.setOnRefreshListener { mViewModel.loadReminders() }
+        binding.refreshLayout.setOnRefreshListener {
+            viewModel.loadReminders()
+            binding.refreshLayout.isRefreshing = false
+        }
 
         return binding.root
     }
@@ -48,13 +46,13 @@ class ReminderListFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        //load the reminders list on the ui
-        mViewModel.loadReminders()
+        // load the reminders list on the ui
+        viewModel.loadReminders()
     }
 
     private fun navigateToAddReminder() {
-        //use the navigationCommand live data to navigate between the fragments
-        mViewModel.navigationCommand.postValue(
+        // use the navigationCommand live data to navigate between the fragments
+        viewModel.navigationCommand.postValue(
             NavigationCommand.To(
                 ReminderListFragmentDirections.actionReminderListFragmentToSaveReminderFragment()
             )
@@ -65,7 +63,7 @@ class ReminderListFragment : BaseFragment() {
         val adapter = RemindersListAdapter {
         }
 
-//        setup the recycler view using the extension function
+        // setup the recycler view using the extension function
         binding.remindersRecyclerView.setup(adapter)
     }
 
@@ -86,7 +84,7 @@ class ReminderListFragment : BaseFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-//        display logout as menu item
+        // display logout as menu item
         inflater.inflate(R.menu.main_menu, menu)
     }
 

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/reminderListFragment"
         android:name="pt.hventura.todoreminder.locationreminders.reminderslist.ReminderListFragment"
-        android:label="ReminderListFragment"
+        android:label="Todo Reminder List"
         tools:layout="@layout/fragment_reminder_list">
         <action
             android:id="@+id/action_reminderListFragment_to_saveReminderFragment"
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/saveReminderFragment"
         android:name="pt.hventura.todoreminder.locationreminders.savereminder.SaveReminderFragment"
-        android:label="SaveReminderFragment"
+        android:label="Save Reminder"
         tools:layout="@layout/fragment_save_reminder">
         <action
             android:id="@+id/action_saveReminderFragment_to_reminderListFragment"
@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/selectLocationFragment"
         android:name="pt.hventura.todoreminder.locationreminders.savereminder.selectreminderlocation.SelectLocationFragment"
-        android:label="SelectLocationFragment"
+        android:label="Select Location"
         tools:layout="@layout/fragment_select_location" />
 
 </navigation>
