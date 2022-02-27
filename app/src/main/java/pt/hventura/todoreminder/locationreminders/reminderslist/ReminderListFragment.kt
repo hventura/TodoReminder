@@ -3,6 +3,7 @@ package pt.hventura.todoreminder.locationreminders.reminderslist
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.firebase.ui.auth.AuthUI
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -13,6 +14,7 @@ import pt.hventura.todoreminder.base.NavigationCommand
 import pt.hventura.todoreminder.databinding.FragmentReminderListBinding
 import pt.hventura.todoreminder.utils.setDisplayHomeAsUpEnabled
 import pt.hventura.todoreminder.utils.setup
+import timber.log.Timber
 
 class ReminderListFragment : BaseFragment() {
     // Using Koin to retrieve the ViewModel instance
@@ -60,7 +62,10 @@ class ReminderListFragment : BaseFragment() {
     }
 
     private fun setupRecyclerView() {
+        // The RemindersListAdapter is waiting for a callback that receives a reminderDataItem,
+        // configured by the BaseRecyclerViewAdapter -> holder.itemView.setOnClickListener
         val adapter = RemindersListAdapter {
+            viewModel.navigationCommand.value = NavigationCommand.To(ReminderListFragmentDirections.actionReminderListFragmentToReminderDescriptionActivity(it))
         }
 
         // setup the recycler view using the extension function
@@ -77,6 +82,10 @@ class ReminderListFragment : BaseFragment() {
                         requireActivity().finish()
                     }
             }
+            R.id.resetReminders -> {
+                Timber.i("Clicked reset reminders")
+                showDialog()
+            }
         }
         return super.onOptionsItemSelected(item)
 
@@ -86,6 +95,20 @@ class ReminderListFragment : BaseFragment() {
         super.onCreateOptionsMenu(menu, inflater)
         // display logout as menu item
         inflater.inflate(R.menu.main_menu, menu)
+    }
+
+    private fun showDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(R.string.sure_to_delete)
+            .setPositiveButton(R.string.i_am_sure) { dialogInterface, _ ->
+                viewModel.resetRemindersList()
+                viewModel.loadReminders()
+                dialogInterface.dismiss()
+            }
+            .setNegativeButton(R.string.not_sure) { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }
+        builder.create().show()
     }
 
 }

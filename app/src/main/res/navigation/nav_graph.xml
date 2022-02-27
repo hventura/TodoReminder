@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_reminderListFragment_to_saveReminderFragment"
             app:destination="@id/saveReminderFragment" />
+        <action
+            android:id="@+id/action_reminderListFragment_to_reminderDescriptionActivity"
+            app:destination="@id/reminderDescriptionActivity" />
     </fragment>
     <fragment
         android:id="@+id/saveReminderFragment"
@@ -31,5 +34,13 @@
         android:name="pt.hventura.todoreminder.locationreminders.savereminder.selectreminderlocation.SelectLocationFragment"
         android:label="Select Location"
         tools:layout="@layout/fragment_select_location" />
+    <activity
+        android:id="@+id/reminderDescriptionActivity"
+        android:name="pt.hventura.todoreminder.locationreminders.ReminderDescriptionActivity"
+        android:label="ReminderDescriptionActivity" >
+        <argument
+            android:name="reminder"
+            app:argType="pt.hventura.todoreminder.locationreminders.reminderslist.ReminderDataItem" />
+    </activity>
 
 </navigation>

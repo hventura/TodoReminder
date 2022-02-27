@@ -61,6 +61,7 @@ class SaveReminderViewModel(val app: Application, private val dataSource: Remind
                     reminderData.location,
                     reminderData.latitude,
                     reminderData.longitude,
+                    reminderData.snapshot,
                     reminderData.id
                 )
             )

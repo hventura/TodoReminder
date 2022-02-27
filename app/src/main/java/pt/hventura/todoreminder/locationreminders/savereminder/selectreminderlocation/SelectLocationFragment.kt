@@ -13,7 +13,6 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.view.*
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -28,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import org.koin.android.ext.android.inject
+import org.koin.core.component.getScopeName
 import pt.hventura.todoreminder.R
 import pt.hventura.todoreminder.base.BaseFragment
 import pt.hventura.todoreminder.base.NavigationCommand
@@ -38,8 +38,8 @@ import pt.hventura.todoreminder.utils.Constants.INTERVAL
 import pt.hventura.todoreminder.utils.Constants.REQUEST_GPS_PERMISSION
 import pt.hventura.todoreminder.utils.Constants.REQUEST_LOCATION_PERMISSION
 import pt.hventura.todoreminder.utils.setDisplayHomeAsUpEnabled
+import timber.log.Timber
 import java.io.FileOutputStream
-import java.util.*
 
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListener {
@@ -134,7 +134,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
             viewModel.longitude.value = selectedPoi!!.latLng.longitude
             viewModel.navigationCommand.value = NavigationCommand.Back
         } else {
-            Toast.makeText(requireContext(), "You did not choose a location!", Toast.LENGTH_SHORT).show()
+            viewModel.showSnackBar.value = "You did not choose a location!"
         }
 
     }
@@ -186,8 +186,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
     private fun setOnMapClick(map: GoogleMap) {
         map.setOnMapClickListener { latLng ->
             map.clear()
-            val snippet = String.format(Locale.getDefault(), "Lat: %1.5f, Long: %2.5f", latLng.latitude, latLng.longitude)
-            val poiName = String.format(Locale.getDefault(), "Lat: %1.2f, Long: %2.2f", latLng.latitude, latLng.longitude)
+            val snippet = getString(R.string.lat_long_snippet, latLng.latitude, latLng.longitude)
+            val poiName = getString(R.string.lat_long_title, latLng.latitude, latLng.longitude)
             val selectedLocation = map.addMarker(
                 MarkerOptions().position(latLng)
                     .title(getString(R.string.dropped_pin))
@@ -216,11 +216,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
                     val packageManager: PackageManager = requireActivity().packageManager
                     val packageName: String = requireActivity().packageName
                     val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
-                    val packageDir: String = packageInfo.applicationInfo.dataDir
-                    viewModel.reminderSnapshotLocation.value = packageDir + "/" + System.currentTimeMillis() + ".png"
-
-                    val out = FileOutputStream(viewModel.reminderSnapshotLocation.value)
-                    bitmap!!.compress(Bitmap.CompressFormat.PNG, 90, out)
+                    val packageDir: String = packageInfo.applicationInfo.dataDir + "/" + System.currentTimeMillis() + ".png"
+                    val out = FileOutputStream(packageDir)
+                    bitmap!!.compress(Bitmap.CompressFormat.PNG, 50, out)
+                    viewModel.reminderSnapshotLocation.value = packageDir
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -284,7 +283,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
         result.addOnCompleteListener { task ->
             try {
                 val response = task.getResult(ApiException::class.java)
-                Toast.makeText(requireContext(), "GPS is already turned on", Toast.LENGTH_SHORT).show()
+                viewModel.showSnackBar.value = "GPS is already turned on"
             } catch (err: ApiException) {
                 when (err.statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {

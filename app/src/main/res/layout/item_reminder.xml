@@ -8,6 +8,7 @@
         <variable
             name="item"
             type="pt.hventura.todoreminder.locationreminders.reminderslist.ReminderDataItem" />
+
     </data>
 
     <androidx.cardview.widget.CardView

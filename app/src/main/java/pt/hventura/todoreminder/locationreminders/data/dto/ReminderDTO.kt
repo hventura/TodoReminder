@@ -27,15 +27,3 @@ data class ReminderDTO(
     @ColumnInfo(name = "snapshot") var snapshot: String?,
     @PrimaryKey @ColumnInfo(name = "entry_id") val id: String = UUID.randomUUID().toString()
 )
-
-fun ReminderDTO.asDomainModel(): ReminderDataItem {
-    return ReminderDataItem(
-        title,
-        description,
-        location,
-        latitude,
-        longitude,
-        snapshot,
-        id
-    )
-}

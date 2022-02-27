@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import pt.hventura.todoreminder.base.BaseViewModel
+import pt.hventura.todoreminder.base.NavigationCommand
 import pt.hventura.todoreminder.locationreminders.data.ReminderDataSource
 import pt.hventura.todoreminder.locationreminders.data.dto.ReminderDTO
 import pt.hventura.todoreminder.locationreminders.data.dto.Result.Error
@@ -59,4 +60,14 @@ class RemindersListViewModel(
     private fun invalidateShowNoData() {
         showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
     }
+
+    /**
+     * Delete All Reminders from Database
+     */
+    fun resetRemindersList() {
+        viewModelScope.launch {
+            dataSource.deleteAllReminders()
+        }
+    }
+
 }
