@@ -17,6 +17,9 @@
     <string name="logout">Logout</string>
     <string name="login">Login</string>
     <string name="reset">Reset List</string>
+    <string name="sure_to_delete">Are you sure you want to delete all data. This action cannot be undone!</string>
+    <string name="i_am_sure">YES, i\'m sure!</string>
+    <string name="not_sure">NO! Do not Delete</string>
     <string name="title_activity_maps">Map</string>
     <string name="normal_map">Normal Map</string>
     <string name="hybrid_map">Hybrid Map</string>
@@ -57,8 +60,5 @@
     <string name="err_enter_title">Please enter title</string>
     <string name="err_no_title">Please go back and provide a title to your Reminder</string>
     <string name="err_select_location">Please select location</string>
-    <string name="sure_to_delete">Are you sure you want to delete all data. This action cannot be undone!</string>
-    <string name="i_am_sure">YES, i\'m sure!</string>
-    <string name="not_sure">NO! Do not Delete</string>
 
 </resources>

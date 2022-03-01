@@ -4,6 +4,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import pt.hventura.todoreminder.BuildConfig
@@ -20,11 +22,14 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
     // We need to create a NotificationChannel associated with our CHANNEL_ID before sending a notification.
     if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
         val name = context.getString(R.string.app_name)
-        val channel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
-            name,
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
+        val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
+            setShowBadge(true)
+            enableLights(true)
+            lightColor = Color.CYAN
+            enableVibration(true)
+            description = context.getString(R.string.geofence_entered)
+        }
+
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -37,13 +42,19 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
     val notificationPendingIntent = stackBuilder
         .getPendingIntent(getUniqueId(), PendingIntent.FLAG_UPDATE_CURRENT)
 
-//    build the notification object with the data to be shown
+    //create big picture style
+    val mapImage = BitmapFactory.decodeFile(reminderDataItem.snapshot)
+    val bigPictureStyle = NotificationCompat.BigPictureStyle().bigPicture(mapImage).bigLargeIcon(null)
+
+    //build the notification object with the data to be shown
     val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.mipmap.ic_launcher)
         .setContentTitle(reminderDataItem.title)
         .setContentText(reminderDataItem.location)
         .setContentIntent(notificationPendingIntent)
         .setAutoCancel(true)
+        .setStyle(bigPictureStyle)
+        .setLargeIcon(mapImage)
         .build()
 
     notificationManager.notify(getUniqueId(), notification)

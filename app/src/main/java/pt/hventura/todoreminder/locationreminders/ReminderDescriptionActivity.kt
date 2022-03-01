@@ -37,6 +37,12 @@ class ReminderDescriptionActivity : AppCompatActivity() {
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder_description)
+
+        // TODO: Check this
+        // val reminderDataItem = intent.getSerializableExtra(EXTRA_ReminderDataItem) as ReminderDataItem
+        // binding.reminderDataItem = reminderDataItem
+        Timber.i(args.toString())
+        Timber.i(intent.getSerializableExtra(EXTRA_ReminderDataItem).toString())
         binding.reminderDataItem = args.reminder
 
         Timber.i(args.reminder.snapshot)

@@ -27,7 +27,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import org.koin.android.ext.android.inject
-import org.koin.core.component.getScopeName
 import pt.hventura.todoreminder.R
 import pt.hventura.todoreminder.base.BaseFragment
 import pt.hventura.todoreminder.base.NavigationCommand
@@ -38,14 +37,15 @@ import pt.hventura.todoreminder.utils.Constants.INTERVAL
 import pt.hventura.todoreminder.utils.Constants.REQUEST_GPS_PERMISSION
 import pt.hventura.todoreminder.utils.Constants.REQUEST_LOCATION_PERMISSION
 import pt.hventura.todoreminder.utils.setDisplayHomeAsUpEnabled
-import timber.log.Timber
 import java.io.FileOutputStream
 
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListener {
-    /**
-     * VARIABLES
-     * */
+
+    /*************
+     * VARIABLES *
+     *************/
+
     //Use Koin to get the view model of the SaveReminder
     override val viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSelectLocationBinding
@@ -122,9 +122,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
         map.animateCamera(cameraUpdate)
     }
 
-    /**
-     * FUNCTIONS
-     * */
+    /*************
+     * FUNCTIONS *
+     *************/
 
     private fun onLocationSelected() {
         if (selectedPoi != null) {
@@ -228,6 +228,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
         map.snapshot(callback)
     }
 
+    /************************
+     * PERMISSIONS AND GPS  *
+     ************************/
+
     private fun isPermissionGranted(): Boolean {
         return (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
@@ -240,7 +244,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
             if (isGPSEnabled()) {
                 LocationServices.getFusedLocationProviderClient(requireContext()).requestLocationUpdates(locationRequest, object : LocationCallback() {
                     override fun onLocationResult(locationResult: LocationResult) {
-                        super.onLocationResult(locationResult)
                         LocationServices.getFusedLocationProviderClient(requireContext())
                             .removeLocationUpdates(this)
                         if (locationResult.locations.size > 0) {
@@ -248,6 +251,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
                             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18f)
                             map.animateCamera(cameraUpdate)
                         }
+                        super.onLocationResult(locationResult)
                     }
                 }, Looper.getMainLooper())
             } else {
