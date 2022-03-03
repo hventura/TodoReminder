@@ -1,5 +1,6 @@
 package pt.hventura.todoreminder.locationreminders
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +10,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.navArgs
 import pt.hventura.todoreminder.R
 import pt.hventura.todoreminder.databinding.ActivityReminderDescriptionBinding
+import pt.hventura.todoreminder.locationreminders.geofence.GeofenceBroadcastReceiver
 import pt.hventura.todoreminder.locationreminders.reminderslist.ReminderDataItem
+import pt.hventura.todoreminder.utils.Constants
 import timber.log.Timber
 
 class ReminderDescriptionActivity : AppCompatActivity() {

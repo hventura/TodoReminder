@@ -1,10 +1,13 @@
 package pt.hventura.todoreminder.base
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-
+import pt.hventura.todoreminder.locationreminders.geofence.GeofenceBroadcastReceiver
+import pt.hventura.todoreminder.utils.Constants
 
 abstract class BaseFragment : Fragment() {
 

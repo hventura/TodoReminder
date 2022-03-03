@@ -45,18 +45,20 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
             Timber.i("Entered geofence!")
             sendReminderNotification(geofencingEvent.triggeringGeofences)
         }
-        // For now we don't want to do anything else to the geofence.
-        // We could handle the different geofenceTransitions here..
+        // For now we don't want to do anything else with the geofence.
+        // We could do something different with the geofenceTransitions here..
         // https://developer.android.com/training/location/geofencing
         // https://developers.google.com/android/reference/com/google/android/gms/location/GeofencingEvent
 
     }
 
     //get the request id of the current geofence
-    private fun sendReminderNotification(triggeringGeofences: List<Geofence>) {
-        // Its a list so we can have multiple geofence.
-        // Attempt 1 - For each geofence, we send a notification for each of them.
-        // TODO: need more attempts?
+    private fun sendReminderNotification(geofenceList: List<Geofence>) {
+        // Its a list so we can have multiple geofence. How to handle if more than one?
+        // Option 1 - For each geofence, we send a notification.
+        // Option 2 - We ignore and show notification only to the 1st of the list.
+        // Because Option 2  is not the best practice (we shouldn't ignore user expectation of the usability of app)
+        // I opt  for Option 1.
 
         // We only need one instance of repository
         val remindersLocalRepository: RemindersLocalRepository by inject()
@@ -65,7 +67,7 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         //We do this all inside coroutine scope:
         CoroutineScope(coroutineContext).launch(SupervisorJob()) {
             //Iterate every geofence registered
-            for (geofence in triggeringGeofences) {
+            for (geofence in geofenceList) {
                 val requestId = geofence.requestId
                 //get the reminder with the request id
                 val result = remindersLocalRepository.getReminder(requestId)

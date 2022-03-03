@@ -67,7 +67,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
         locationRequest.interval = INTERVAL
         locationRequest.fastestInterval = FAST_INTERVAL
 
-        // TODO: 1) add the map setup implementation
+        // DONE: 1) add the map setup implementation
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -81,11 +81,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.setPadding(5, 0, 5, 70)
-        // TODO: 2) zoom to the user location after taking his permission
+        // DONE: 2) zoom to the user location after taking his permission
         enableMyLocation()
-        // TODO: 3) add style to the map
+        // DONE: 3) add style to the map
         setMapStyle(map)
-        // TODO: 4) put a marker to location that the user selected
+        // DONE: 4) put a marker to location that the user selected
         setOnPoiClick(map)
         setOnMapClick(map)
     }
