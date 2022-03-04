@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import pt.hventura.todoreminder.base.BaseViewModel
-import pt.hventura.todoreminder.base.NavigationCommand
 import pt.hventura.todoreminder.locationreminders.data.ReminderDataSource
 import pt.hventura.todoreminder.locationreminders.data.dto.ReminderDTO
 import pt.hventura.todoreminder.locationreminders.data.dto.Result.Error
