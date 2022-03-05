@@ -12,6 +12,7 @@ import pt.hventura.todoreminder.authentication.AuthenticationActivity
 import pt.hventura.todoreminder.base.BaseFragment
 import pt.hventura.todoreminder.base.NavigationCommand
 import pt.hventura.todoreminder.databinding.FragmentReminderListBinding
+import pt.hventura.todoreminder.locationreminders.ReminderDescriptionActivity
 import pt.hventura.todoreminder.utils.setDisplayHomeAsUpEnabled
 import pt.hventura.todoreminder.utils.setup
 import timber.log.Timber
@@ -65,7 +66,9 @@ class ReminderListFragment : BaseFragment() {
         // The RemindersListAdapter is waiting for a callback that receives a reminderDataItem,
         // configured by the BaseRecyclerViewAdapter -> holder.itemView.setOnClickListener
         val adapter = RemindersListAdapter {
-            viewModel.navigationCommand.value = NavigationCommand.To(ReminderListFragmentDirections.actionReminderListFragmentToReminderDescriptionActivity(it))
+            val intent = Intent(requireActivity(), ReminderDescriptionActivity::class.java)
+            intent.putExtra("EXTRA_ReminderDataItem", it)
+            startActivity(intent)
         }
 
         // setup the recycler view using the extension function

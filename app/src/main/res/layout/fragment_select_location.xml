@@ -28,13 +28,12 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/confirm_button"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="-25dp"
+            android:layout_height="50dp"
             android:background="@drawable/custom_button_borderless"
-            android:paddingBottom="25dp"
             android:text="@string/select_location_confirm_button"
             android:textColor="@android:color/white"
             android:textStyle="bold"
+            android:layout_margin="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

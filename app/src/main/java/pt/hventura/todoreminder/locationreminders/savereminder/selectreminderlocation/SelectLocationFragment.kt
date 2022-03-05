@@ -80,7 +80,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        map.setPadding(5, 0, 5, 70)
+        map.setPadding(5, 0, 5, 200)
         // DONE: 2) zoom to the user location after taking his permission
         enableMyLocation()
         // DONE: 3) add style to the map

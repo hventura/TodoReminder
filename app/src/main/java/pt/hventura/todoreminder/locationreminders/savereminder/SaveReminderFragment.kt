@@ -5,14 +5,11 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
@@ -20,7 +17,6 @@ import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
-import pt.hventura.todoreminder.BuildConfig
 import pt.hventura.todoreminder.R
 import pt.hventura.todoreminder.base.BaseFragment
 import pt.hventura.todoreminder.base.NavigationCommand
@@ -29,8 +25,6 @@ import pt.hventura.todoreminder.locationreminders.geofence.GeofenceBroadcastRece
 import pt.hventura.todoreminder.locationreminders.reminderslist.ReminderDataItem
 import pt.hventura.todoreminder.utils.Constants
 import pt.hventura.todoreminder.utils.Constants.GEOFENCE_RADIUS_METERS
-import pt.hventura.todoreminder.utils.Constants.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
-import pt.hventura.todoreminder.utils.Constants.REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
 import pt.hventura.todoreminder.utils.Constants.runningQOrLater
 import pt.hventura.todoreminder.utils.setDisplayHomeAsUpEnabled
 import timber.log.Timber

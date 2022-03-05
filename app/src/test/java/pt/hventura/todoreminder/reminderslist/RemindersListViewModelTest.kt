@@ -1,6 +1,5 @@
 package pt.hventura.todoreminder.reminderslist
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,12 +33,8 @@ class RemindersListViewModelTest {
     // Fake Repo
     private lateinit var dataSource: FakeDataSource
 
-    @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
-
     @Before
     fun setupViewModel() {
-        // We initialise the tasks to 3, with one active and two completed
         dataSource = FakeDataSource()
         remindersListViewModel = RemindersListViewModel(ApplicationProvider.getApplicationContext(), dataSource)
     }

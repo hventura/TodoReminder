@@ -3,6 +3,7 @@ package pt.hventura.todoreminder.locationreminders.data.dto
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import pt.hventura.todoreminder.locationreminders.reminderslist.ReminderDataItem
 import java.util.*
 
 /**
@@ -26,3 +27,10 @@ data class ReminderDTO(
     @ColumnInfo(name = "snapshot") var snapshot: String?,
     @PrimaryKey @ColumnInfo(name = "entry_id") val id: String = UUID.randomUUID().toString()
 )
+
+// Just used for testing purpose...
+fun ReminderDTO.asDataItem(): ReminderDataItem {
+    return ReminderDataItem(
+        title, description, location, latitude, longitude, snapshot, id
+    )
+}

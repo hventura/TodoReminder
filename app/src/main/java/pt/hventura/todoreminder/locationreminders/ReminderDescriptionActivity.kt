@@ -28,27 +28,19 @@ class ReminderDescriptionActivity : AppCompatActivity() {
         }
     }
 
-    private val args: ReminderDescriptionActivityArgs by navArgs()
     private lateinit var binding: ActivityReminderDescriptionBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val reminderDataItem = intent.getSerializableExtra(EXTRA_ReminderDataItem) as ReminderDataItem
+
         if (supportActionBar != null) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            supportActionBar!!.title = args.reminder.title
+            supportActionBar!!.title = reminderDataItem.title
         }
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder_description)
-
-        // TODO: Check this
-        // val reminderDataItem = intent.getSerializableExtra(EXTRA_ReminderDataItem) as ReminderDataItem
-        // binding.reminderDataItem = reminderDataItem
-        Timber.i(args.toString())
-        Timber.i(intent.getSerializableExtra(EXTRA_ReminderDataItem).toString())
-        binding.reminderDataItem = args.reminder
-
-        Timber.i(args.reminder.snapshot)
+        binding.reminderDataItem = reminderDataItem
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

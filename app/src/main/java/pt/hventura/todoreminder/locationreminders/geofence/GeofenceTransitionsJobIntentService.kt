@@ -41,8 +41,10 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
             return
         }
 
-        if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-            Timber.i("Entered geofence!")
+        if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
+            geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL
+        ) {
+            Timber.i("Entered or dwelling geofence!")
             sendReminderNotification(geofencingEvent.triggeringGeofences)
         }
         // For now we don't want to do anything else with the geofence.
