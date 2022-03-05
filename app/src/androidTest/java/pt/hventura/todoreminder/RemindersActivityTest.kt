@@ -95,7 +95,7 @@ class RemindersActivityTest :
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
     }
 
-    // TODO: Tests here
+    // Tests here
     @Test
     fun createOneReminder_checkIsDisplayed() = runBlocking {
         //start RemindersActivity

@@ -22,7 +22,6 @@ import java.util.*
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class SaveReminderViewModelTest {
-    //TODO: provide testing to the SaveReminderView and its live data objects
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
@@ -78,7 +77,7 @@ class SaveReminderViewModelTest {
             40.3315763674, -7.61673115209, "/path/to/snapshot1", reminderID
         )
         assertThat(saveReminderViewModel.validateAndSaveReminder(reminderWithCorrectValues), `is`(true))
-        // Assertion passes but has error that i cannot find out why :/ 
+        // Assertion passes but has error that i cannot find out why :/
     }
 
 }

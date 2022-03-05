@@ -93,7 +93,7 @@ class ReminderListFragmentTest :
         }
     }
 
-    //    TODO: test the navigation of the fragments.
+    //    DONE: test the navigation of the fragments.
     @Test
     fun remindersList_clickAdd_GotoSaveReminderFragment() {
         //1st used this: https://developer.android.com/guide/navigation/navigation-testing
@@ -111,7 +111,7 @@ class ReminderListFragmentTest :
         verify(navController).navigate(ReminderListFragmentDirections.actionReminderListFragmentToSaveReminderFragment())
     }
 
-    //    TODO: test the displayed data on the UI.
+    //    DONE: test the displayed data on the UI.
     @Test
     fun remindersList_clickReminder_showDetails() = runBlocking {
         val reminder1 = ReminderDTO(
@@ -139,7 +139,7 @@ class ReminderListFragmentTest :
 
     }
 
-    //    TODO: add testing for the error messages.
+    //    DONE: add testing for the error messages.
     @Test
     fun reminderList_showNoData() {
         launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.TodoReminderTheme)
