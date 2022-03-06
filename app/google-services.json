@@ -7,6 +7,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:218708369370:android:1e2a01bd2380a385f22ae3",
+        "android_client_info": {
+          "package_name": "com.udacity.project4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218708369370-6p8uiffc57r6o7hpellg92o0bmmu7qot.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.udacity.project4",
+            "certificate_hash": "4c581be42609c63d8857d3c0f4d609cd6ce0e3c6"
+          }
+        },
+        {
+          "client_id": "218708369370-f8rafabsc1mgkp3vq2k5tnso21urm786.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWtoy8PjmhteUwg1qFNdmp_VOQwACrv7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218708369370-f8rafabsc1mgkp3vq2k5tnso21urm786.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:218708369370:android:4c174a7342a756c9f22ae3",
         "android_client_info": {
           "package_name": "pt.hventura.todoreminder"
