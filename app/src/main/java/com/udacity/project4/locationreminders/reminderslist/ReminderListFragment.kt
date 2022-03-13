@@ -101,6 +101,7 @@ class ReminderListFragment : BaseFragment() {
     }
 
     private fun showDialog() {
+        // In API 26 (Android 8) - Pixel 2 - This is not working, why?
         val builder = AlertDialog.Builder(requireContext())
         builder.setMessage(R.string.sure_to_delete)
             .setPositiveButton(R.string.i_am_sure) { dialogInterface, _ ->

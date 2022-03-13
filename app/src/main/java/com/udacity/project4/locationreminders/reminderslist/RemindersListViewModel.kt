@@ -66,6 +66,8 @@ class RemindersListViewModel(
     fun resetRemindersList() {
         viewModelScope.launch {
             dataSource.deleteAllReminders()
+            // How can i access the geofence and delete all too??
+            // Should we globalize the geofencingClient and inject it with Koin and access it here too?
         }
     }
 

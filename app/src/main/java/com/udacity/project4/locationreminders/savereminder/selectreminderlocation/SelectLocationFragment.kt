@@ -2,22 +2,19 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.IntentSender.SendIntentException
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.location.Location
-import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
+import android.provider.Settings
 import android.view.*
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -25,8 +22,8 @@ import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.android.gms.tasks.Task
-import org.koin.android.ext.android.inject
+import com.google.android.material.snackbar.Snackbar
+import com.udacity.project4.BuildConfig
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -34,13 +31,13 @@ import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.Constants.FAST_INTERVAL
 import com.udacity.project4.utils.Constants.INTERVAL
-import com.udacity.project4.utils.Constants.REQUEST_GPS_PERMISSION
 import com.udacity.project4.utils.Constants.REQUEST_LOCATION_PERMISSION
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
+import org.koin.android.ext.android.inject
 import java.io.FileOutputStream
 
 
-class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListener {
+class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     /*************
      * VARIABLES *
@@ -51,6 +48,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
     private lateinit var binding: FragmentSelectLocationBinding
     private lateinit var map: GoogleMap
     private lateinit var locationRequest: LocationRequest
+    private var snackbar: Snackbar? = null
+    private var mapReady = false
+    private var permissionsGranted = false
     private var selectedPoi: PointOfInterest? = null
 
     @SuppressLint("MissingPermission")
@@ -62,10 +62,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
 
-        locationRequest = LocationRequest.create()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = INTERVAL
-        locationRequest.fastestInterval = FAST_INTERVAL
+        checkPermissions()
 
         // DONE: 1) add the map setup implementation
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -82,12 +79,15 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
         map = googleMap
         map.setPadding(5, 0, 5, 200)
         // DONE: 2) zoom to the user location after taking his permission
-        enableMyLocation()
+        if (permissionsGranted) {
+            enableMyLocation(map)
+        }
         // DONE: 3) add style to the map
         setMapStyle(map)
         // DONE: 4) put a marker to location that the user selected
         setOnPoiClick(map)
         setOnMapClick(map)
+        mapReady = true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -116,15 +116,30 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
         }
     }
 
-    override fun onLocationChanged(location: Location) {
-        val latLng = LatLng(location.latitude, location.longitude)
-        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18f)
-        map.animateCamera(cameraUpdate)
-    }
-
     /*************
      * FUNCTIONS *
      *************/
+
+    @SuppressLint("MissingPermission")
+    private fun enableMyLocation(map: GoogleMap) {
+        map.isMyLocationEnabled = true
+        locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = INTERVAL
+            fastestInterval = FAST_INTERVAL
+        }
+        LocationServices.getFusedLocationProviderClient(requireContext()).requestLocationUpdates(locationRequest, object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                LocationServices.getFusedLocationProviderClient(requireContext()).removeLocationUpdates(this)
+                if (locationResult.locations.size > 0) {
+                    val latLng = LatLng(locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
+                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18.5f)
+                    map.animateCamera(cameraUpdate)
+                }
+                super.onLocationResult(locationResult)
+            }
+        }, Looper.getMainLooper())
+    }
 
     private fun onLocationSelected() {
         if (selectedPoi != null) {
@@ -228,79 +243,55 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback, LocationListe
         map.snapshot(callback)
     }
 
-    /************************
-     * PERMISSIONS AND GPS  *
-     ************************/
+    /***************
+     * PERMISSIONS *
+     ***************/
+    private fun checkPermissions() {
+        if (isPermissionGranted()) {
+            permissionsGranted = true
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION)
+        }
+    }
 
     private fun isPermissionGranted(): Boolean {
-        return (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        return ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
-    @SuppressLint("MissingPermission")
-    private fun enableMyLocation() {
-        if (isPermissionGranted()) {
-            map.isMyLocationEnabled = true
-            if (isGPSEnabled()) {
-                LocationServices.getFusedLocationProviderClient(requireContext()).requestLocationUpdates(locationRequest, object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult) {
-                        LocationServices.getFusedLocationProviderClient(requireContext())
-                            .removeLocationUpdates(this)
-                        if (locationResult.locations.size > 0) {
-                            val latLng = LatLng(locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
-                            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18f)
-                            map.animateCamera(cameraUpdate)
-                        }
-                        super.onLocationResult(locationResult)
-                    }
-                }, Looper.getMainLooper())
-            } else {
-                turnOnGPS()
-            }
-        } else {
-            map.isMyLocationEnabled = false
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                REQUEST_LOCATION_PERMISSION
-            )
-        }
-    }
-
-    private fun isGPSEnabled(): Boolean {
-        var isEnable = false
-        if (isPermissionGranted()) {
-            val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            isEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        }
-        return isEnable
-    }
-
-    private fun turnOnGPS() {
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        builder.setAlwaysShow(true)
-        val result: Task<LocationSettingsResponse> = LocationServices.getSettingsClient(requireContext())
-            .checkLocationSettings(builder.build())
-        result.addOnCompleteListener { task ->
-            try {
-                val response = task.getResult(ApiException::class.java)
-                viewModel.showSnackBar.value = "GPS is already turned on"
-            } catch (err: ApiException) {
-                when (err.statusCode) {
-                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
-                        try {
-                            val resolvableApiException = err as ResolvableApiException
-                            resolvableApiException.startResolutionForResult(requireActivity(), REQUEST_GPS_PERMISSION)
-                        } catch (ex: SendIntentException) {
-                            ex.printStackTrace()
-                        }
-                    }
-                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {}
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                permissionsGranted = true
+                binding.confirmButton.isEnabled = true
+                if (mapReady) {
+                    enableMyLocation(map)
                 }
+            } else {
+                binding.confirmButton.isEnabled = false
+
+                snackbar = Snackbar.make(
+                    requireView(),
+                    R.string.permission_denied_explanation,
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction(R.string.settings) {
+                        startActivity(Intent().apply {
+                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        })
+                    }
+                snackbar!!.show()
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (snackbar != null && snackbar!!.isShown) {
+            snackbar!!.dismiss()
+        }
+    }
+
 }
