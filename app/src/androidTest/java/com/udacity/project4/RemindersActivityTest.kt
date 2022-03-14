@@ -9,9 +9,13 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.google.android.material.internal.ContextUtils.getActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -34,6 +38,7 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.EspressoIdlingResource
 import com.udacity.project4.util.monitorActivity
+import org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -116,6 +121,51 @@ class RemindersActivityTest :
         activityScenario.close()
     }
 
+    @Test
+    fun createOneReminder_checkSnackBar() = runBlocking {
+        //start RemindersActivity
+        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        //create new reminder
+        onView(withId(R.id.addReminderFAB)).perform(click())
+        onView(withId(R.id.reminderTitle)).perform(typeText("TITLE_A"))
+        onView(withId(R.id.reminderDescription)).perform(typeText("DESCRIPTION_A"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.selectLocation)).perform(click())
+        delay(5000) // wait for animation to user location
+        onView(withId(R.id.map)).perform(click())
+        delay(5000) // wait for animation to user selection (and snapshot)
+        onView(withId(R.id.confirm_button)).perform(click())
+        onView(withId(R.id.saveReminder)).perform(click())
+        //check the snackbar
+        onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText(R.string.reminder_saved)))
+
+        activityScenario.close()
+    }
+
+    @Test
+    fun createOneReminder_checkToast() = runBlocking {
+        //start RemindersActivity
+        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        //create new reminder
+        onView(withId(R.id.addReminderFAB)).perform(click())
+        onView(withId(R.id.reminderTitle)).perform(typeText("TITLE_A"))
+        onView(withId(R.id.reminderDescription)).perform(typeText("DESCRIPTION_A"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.selectLocation)).perform(click())
+        delay(5000) // wait for animation to user location
+        onView(withId(R.id.map)).perform(click())
+        delay(5000) // wait for animation to user selection (and snapshot)
+        onView(withId(R.id.confirm_button)).perform(click())
+        onView(withId(R.id.saveReminder)).perform(click())
+        //check Toast
+        onView(withText(R.string.geofence_added)).inRoot(withDecorView(not(getActivity(appContext)?.window?.decorView))).check(matches(isDisplayed()))
+        delay(3000)
+        activityScenario.close()
+    }
 
     /**
      * Unregister your Idling Resource so it can be garbage collected and does not leak any memory.

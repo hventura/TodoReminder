@@ -168,6 +168,7 @@ class SaveReminderFragment : BaseFragment() {
         }
         locationSettingsResponseTask.addOnCompleteListener {
             if (it.isSuccessful) {
+                // Thanks for the Hint! :)
                 addGeofenceForReminderAndSaveToDB()
             }
         }
@@ -193,11 +194,13 @@ class SaveReminderFragment : BaseFragment() {
 
         geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
             addOnSuccessListener {
-                viewModel.showSnackBar.value = getString(R.string.geofence_added)
                 viewModel.validateAndSaveReminder(reminder)
                 Handler().postDelayed({
+                    viewModel.showToast.value = getString(R.string.geofence_added)
+                }, 1000)
+                Handler().postDelayed({
                     viewModel.navigationCommand.value = NavigationCommand.Back
-                }, 2000)
+                }, 1500)
 
             }
             addOnFailureListener {
