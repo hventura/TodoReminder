@@ -6,7 +6,7 @@ import androidx.core.app.JobIntentService
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import kotlinx.coroutines.*
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.*
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
@@ -60,12 +60,11 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         // Because Option 2  is not the best practice (we shouldn't ignore user expectation of the usability of app)
         // I opt  for Option 1.
 
-        // We only need one instance of repository
-        val remindersLocalRepository: RemindersLocalRepository by inject()
-
         //And as the interaction to the repository has to be through a coroutine scope
         //We do this all inside coroutine scope:
         CoroutineScope(coroutineContext).launch(SupervisorJob()) {
+            // We only need one instance of repository
+            val remindersLocalRepository: RemindersLocalRepository by inject()
             //Iterate every geofence registered
             for (geofence in geofenceList) {
                 val requestId = geofence.requestId

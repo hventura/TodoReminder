@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
@@ -46,22 +47,22 @@ class SaveReminderFragment : BaseFragment() {
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var reminder: ReminderDataItem
 
+    private val intentFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        (PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+    } else {
+        PendingIntent.FLAG_UPDATE_CURRENT
+    }
+
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
         intent.action = ACTION_GEOFENCE_EVENT
-        PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.getBroadcast(
+            requireContext(),
+            0,
+            intent,
+            intentFlag
+        )
     }
-
-//    @TargetApi(29)
-//    private val locationPermissionRequest = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-//        foregroundLocationApproved = (permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) &&
-//                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false))
-//        backgroundPermissionApproved = if (runningQOrLater) {
-//            permissions.getOrDefault(Manifest.permission.ACCESS_BACKGROUND_LOCATION, false)
-//        } else {
-//            true
-//        }
-//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_save_reminder, container, false)

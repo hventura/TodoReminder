@@ -12,7 +12,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "pt.hventura.todoreminder"
+        applicationId "com.udacity.project4"
         minSdk 26
         targetSdk 31
         versionCode 1
