@@ -2,12 +2,14 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
@@ -16,11 +18,8 @@ import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.BuildConfig
@@ -35,7 +34,6 @@ import com.udacity.project4.utils.Constants.REQUEST_LOCATION_PERMISSION
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 import java.io.FileOutputStream
-
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
@@ -133,8 +131,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 LocationServices.getFusedLocationProviderClient(requireContext()).removeLocationUpdates(this)
                 if (locationResult.locations.size > 0) {
                     val latLng = LatLng(locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
-                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18.5f)
-                    map.animateCamera(cameraUpdate)
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(latLng)
+                        .zoom(18f)
+                        .bearing(locationResult.lastLocation.bearing)
+                        .build()
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
                 }
                 super.onLocationResult(locationResult)
             }

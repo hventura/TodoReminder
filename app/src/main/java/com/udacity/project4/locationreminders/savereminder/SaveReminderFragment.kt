@@ -46,8 +46,6 @@ class SaveReminderFragment : BaseFragment() {
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var reminder: ReminderDataItem
 
-    //    private var foregroundLocationApproved = false
-//    private var backgroundPermissionApproved = false
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(requireContext(), GeofenceBroadcastReceiver::class.java)
         intent.action = ACTION_GEOFENCE_EVENT
@@ -68,6 +66,7 @@ class SaveReminderFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_save_reminder, container, false)
         setDisplayHomeAsUpEnabled(true)
+        geofencingClient = LocationServices.getGeofencingClient(requireContext())
         binding.viewModel = viewModel
         return binding.root
     }
@@ -80,7 +79,7 @@ class SaveReminderFragment : BaseFragment() {
             viewModel.navigationCommand.value =
                 NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
         }
-        geofencingClient = LocationServices.getGeofencingClient(requireContext())
+
 
         binding.saveReminder.setOnClickListener {
             saveReminder()
@@ -141,7 +140,7 @@ class SaveReminderFragment : BaseFragment() {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
             interval = INTERVAL
-            fastestInterval = FAST_INTERVAL
+            fastestInterval = FAST_INTERVAL.toLong()
         }
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
         val settingsClient = LocationServices.getSettingsClient(requireActivity())

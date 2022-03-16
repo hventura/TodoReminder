@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.udacity.project4.utils.Constants.ACTION_GEOFENCE_EVENT
+import timber.log.Timber
 
 /**
  * Triggered by the Geofence.  Since we can have many Geofences at once, we pull the request
@@ -18,7 +19,9 @@ import com.udacity.project4.utils.Constants.ACTION_GEOFENCE_EVENT
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         //implement the onReceive method to receive the geofencing events at the background
+        Timber.i("onReceive Triggered")
         if (intent.action == ACTION_GEOFENCE_EVENT) {
+            Timber.i("And entered in intent.action!")
             GeofenceTransitionsJobIntentService.enqueueWork(context, intent)
         }
     }

@@ -1,7 +1,15 @@
 package com.udacity.project4.reminderslist
 
+import android.app.Application
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.udacity.project4.MainCoroutineRule
+import com.udacity.project4.data.FakeDataSource
+import com.udacity.project4.getOrAwaitValue
+import com.udacity.project4.locationreminders.data.dto.ReminderDTO
+import com.udacity.project4.locationreminders.data.dto.Result
+import com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.pauseDispatcher
 import kotlinx.coroutines.test.resumeDispatcher
@@ -13,19 +21,20 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.udacity.project4.MainCoroutineRule
-import com.udacity.project4.data.FakeDataSource
-import com.udacity.project4.getOrAwaitValue
-import com.udacity.project4.locationreminders.data.dto.ReminderDTO
-import com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel
+import org.koin.test.AutoCloseKoinTest
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
-class RemindersListViewModelTest {
+class RemindersListViewModelTest : AutoCloseKoinTest() {
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
+
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var appContext: Application
 
     // Subject
     private lateinit var remindersListViewModel: RemindersListViewModel
@@ -35,8 +44,9 @@ class RemindersListViewModelTest {
 
     @Before
     fun setupViewModel() {
+        appContext = ApplicationProvider.getApplicationContext()
         dataSource = FakeDataSource()
-        remindersListViewModel = RemindersListViewModel(ApplicationProvider.getApplicationContext(), dataSource)
+        remindersListViewModel = RemindersListViewModel(appContext, dataSource)
     }
 
     @Test
@@ -49,10 +59,12 @@ class RemindersListViewModelTest {
     fun loadReminders_loading() {
         mainCoroutineRule.pauseDispatcher()
         remindersListViewModel.loadReminders()
-        assertThat(remindersListViewModel.showLoading.getOrAwaitValue(), `is`(true))
+        val shouldBeLoading = remindersListViewModel.showLoading.getOrAwaitValue()
+        assertThat(shouldBeLoading, `is`(true))
 
         mainCoroutineRule.resumeDispatcher()
-        assertThat(remindersListViewModel.showLoading.getOrAwaitValue(), `is`(false))
+        val shouldBeFalse = remindersListViewModel.showLoading.getOrAwaitValue()
+        assertThat(shouldBeFalse, `is`(false))
     }
 
     @Test
@@ -84,6 +96,14 @@ class RemindersListViewModelTest {
         dataSource.saveReminder(reminder1)
         remindersListViewModel.loadReminders()
         assertThat(remindersListViewModel.showSnackBar.getOrAwaitValue(), `is`("Test Exception"))
+    }
+
+    @Test
+    fun checkGetReminderWithDifferentID_shouldReturnError() = mainCoroutineRule.runBlockingTest {
+        val result = dataSource.getReminder("00")
+        val expected = Error("Reminder not found")
+        assertThat((result as Result.Error).message, `is`(expected.message))
+
     }
 
     @After

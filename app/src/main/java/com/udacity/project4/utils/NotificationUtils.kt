@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
+import com.google.android.gms.location.LocationServices
 import com.udacity.project4.R
 import com.udacity.project4.BuildConfig
 import com.udacity.project4.locationreminders.ReminderDescriptionActivity
@@ -58,6 +59,10 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
         .build()
 
     notificationManager.notify(getUniqueId(), notification)
+
+    // Todo: Remove geofencing here (but how? how to get the PendingIntent)
+    //val geofencingClient = LocationServices.getGeofencingClient(context)
+    //geofencingClient.removeGeofences(`miss Pending Intent`)
 }
 
 private fun getUniqueId() = ((System.currentTimeMillis() % 10000).toInt())

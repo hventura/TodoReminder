@@ -40,6 +40,7 @@ import com.udacity.project4.locationreminders.data.local.LocalDB
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
+import com.udacity.project4.util.monitorFragment
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
@@ -55,10 +56,6 @@ class ReminderListFragmentTest :
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
-
-    private fun DataBindingIdlingResource.monitorReminderListFragment(fragmentScenario: FragmentScenario<ReminderListFragment>) {
-        fragmentScenario.onFragment { fragment -> activity = fragment.requireActivity() }
-    }
 
     @Before
     fun init() {
@@ -127,7 +124,7 @@ class ReminderListFragmentTest :
             navController.setGraph(R.navigation.nav_graph)
             Navigation.setViewNavController(fragment.requireView(), navController)
         }
-        dataBindingIdlingResource.monitorReminderListFragment(reminderListScenario)
+        dataBindingIdlingResource.monitorFragment(reminderListScenario)
 
         onView(withId(R.id.remindersRecyclerView)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(

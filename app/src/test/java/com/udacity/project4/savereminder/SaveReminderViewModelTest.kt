@@ -1,30 +1,38 @@
 package com.udacity.project4.savereminder
 
 import android.app.Application
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.nullValue
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
 import com.udacity.project4.MainCoroutineRule
 import com.udacity.project4.data.FakeDataSource
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.nullValue
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.koin.test.AutoCloseKoinTest
+import org.robolectric.annotation.Config
 import java.util.*
 
 @Config(manifest = Config.NONE)
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class SaveReminderViewModelTest {
+class SaveReminderViewModelTest: AutoCloseKoinTest() {
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
+
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
+
     private lateinit var appContext: Application
 
     // Subject
@@ -70,7 +78,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun saveReminder_CorrectValues_shouldReturnTrueAndSaveToDatabase() {
+    fun saveReminder_CorrectValues_shouldReturnTrueAndSaveToDatabase() = mainCoroutineRule.runBlockingTest {
         val reminderID = UUID.randomUUID().toString()
         val reminderWithCorrectValues = ReminderDataItem(
             "Title 1", "Description 1", "Test Location 1",
@@ -78,6 +86,11 @@ class SaveReminderViewModelTest {
         )
         assertThat(saveReminderViewModel.validateAndSaveReminder(reminderWithCorrectValues), `is`(true))
         // Assertion passes but has error that i cannot find out why :/
+    }
+
+    @After
+    fun deleteAllData() = mainCoroutineRule.runBlockingTest {
+        dataSource.deleteAllReminders()
     }
 
 }
