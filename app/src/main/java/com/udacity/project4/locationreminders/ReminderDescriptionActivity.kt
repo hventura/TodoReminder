@@ -7,8 +7,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.udacity.project4.R
+import com.udacity.project4.authentication.AuthenticationActivity
+import com.udacity.project4.authentication.data.UserData
 import com.udacity.project4.databinding.ActivityReminderDescriptionBinding
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import com.udacity.project4.utils.PreferencesManager
 
 class ReminderDescriptionActivity : AppCompatActivity() {
 
@@ -16,19 +19,22 @@ class ReminderDescriptionActivity : AppCompatActivity() {
         private const val EXTRA_ReminderDataItem = "EXTRA_ReminderDataItem"
 
         // receive the reminder object after the user clicks on the notification
-        fun newIntent(context: Context, reminderDataItem: ReminderDataItem): Intent {
+        fun newIntent(context: Context, reminderDataItem: ReminderDataItem, fromIntent: Boolean): Intent {
             val intent = Intent(context, ReminderDescriptionActivity::class.java)
             intent.putExtra(EXTRA_ReminderDataItem, reminderDataItem)
+            intent.putExtra("fromIntent", fromIntent)
             return intent
         }
     }
 
     private lateinit var binding: ActivityReminderDescriptionBinding
+    private var fromIntent = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val reminderDataItem = intent.getSerializableExtra(EXTRA_ReminderDataItem) as ReminderDataItem
+        fromIntent = intent.getBooleanExtra("fromIntent", false)
 
         if (supportActionBar != null) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -41,7 +47,15 @@ class ReminderDescriptionActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                if (fromIntent) {
+                    if (PreferencesManager.retrieve<UserData>("userData") != null) {
+                        startActivity(Intent(this, RemindersActivity::class.java))
+                    } else {
+                        startActivity(Intent(this, AuthenticationActivity::class.java))
+                    }
+                } else {
+                    finish()
+                }
             }
         }
         return super.onOptionsItemSelected(item)

@@ -24,6 +24,7 @@ class AuthenticationViewModel(app: Application) : BaseViewModel(app) {
             PreferencesManager.put(userData, "userData")
             AuthenticationState.AUTHENTICATED
         } else {
+            PreferencesManager.put(null, "userData")
             AuthenticationState.UNAUTHENTICATED
         }
     }
