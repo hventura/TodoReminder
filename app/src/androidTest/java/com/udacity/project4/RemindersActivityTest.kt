@@ -143,6 +143,7 @@ class RemindersActivityTest :
         activityScenario.close()
     }
 
+    // Not passing due to?: https://github.com/android/android-test/issues/803
     @Test
     fun createOneReminder_checkToast() = runBlocking {
         //start RemindersActivity
@@ -161,7 +162,7 @@ class RemindersActivityTest :
         onView(withId(R.id.confirm_button)).perform(click())
         onView(withId(R.id.saveReminder)).perform(click())
         //check Toast
-        delay(3000)
+        delay(1000)
         onView(withText(R.string.geofence_added)).inRoot(withDecorView(not(getActivity(appContext)?.window?.decorView))).check(matches(isDisplayed()))
         activityScenario.close()
     }
