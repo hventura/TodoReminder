@@ -16,6 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
+import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.data.dto.Result.Success
 import java.util.*
 
@@ -88,6 +89,22 @@ class RemindersLocalRepositoryTest {
         loaded as Success<List<ReminderDTO>>
         assertThat(loaded.data, `is`(emptyList()))
 
+    }
+
+    @Test
+    fun getRemindersList_shouldReturnError() = runBlocking {
+        val shouldBeError = repository.getReminders(true)
+        assertThat(shouldBeError is Result.Error, `is`(true))
+        shouldBeError as Result.Error
+        assertThat(shouldBeError.message, `is`("Error getting Reminders!"))
+    }
+
+    @Test
+    fun getReminderById_shouldReturnError() = runBlocking {
+        val shouldNotExist = repository.getReminder("NO_ID")
+        assertThat(shouldNotExist is Result.Error, `is`(true))
+        shouldNotExist as Result.Error
+        assertThat(shouldNotExist.message, `is`("Reminder not found!"))
     }
 
     @After

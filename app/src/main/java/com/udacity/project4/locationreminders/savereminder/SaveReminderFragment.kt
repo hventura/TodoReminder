@@ -36,7 +36,6 @@ import com.udacity.project4.utils.Constants.REQUEST_FOREGROUND_ONLY_PERMISSIONS_
 import com.udacity.project4.utils.Constants.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.udacity.project4.utils.Constants.runningQOrLater
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -142,7 +141,7 @@ class SaveReminderFragment : BaseFragment() {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
             interval = INTERVAL
-            fastestInterval = FAST_INTERVAL.toLong()
+            fastestInterval = FAST_INTERVAL
         }
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
         val settingsClient = LocationServices.getSettingsClient(requireActivity())
@@ -151,9 +150,11 @@ class SaveReminderFragment : BaseFragment() {
         locationSettingsResponseTask.addOnFailureListener { exception ->
             if (exception is ResolvableApiException && resolve) {
                 try {
-                    exception.startResolutionForResult(
-                        requireActivity(),
-                        REQUEST_TURN_DEVICE_LOCATION_ON
+                    // Ok, thanks for the hint:
+                    startIntentSenderForResult(
+                        exception.resolution.intentSender,
+                        REQUEST_TURN_DEVICE_LOCATION_ON,
+                        null, 0, 0, 0, null
                     )
                 } catch (sendEx: IntentSender.SendIntentException) {
                     Timber.d("Error getting location settings resolution: " + sendEx.message)
@@ -249,6 +250,13 @@ class SaveReminderFragment : BaseFragment() {
                 }.show()
         } else {
             checkDeviceLocationSettingsAndStartGeofence()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_TURN_DEVICE_LOCATION_ON) {
+            checkDeviceLocationSettingsAndStartGeofence(false)
         }
     }
 

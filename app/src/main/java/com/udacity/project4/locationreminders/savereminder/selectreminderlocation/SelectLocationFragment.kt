@@ -2,11 +2,13 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
@@ -48,11 +50,17 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override val viewModel: SaveReminderViewModel by sharedViewModel()
     private lateinit var binding: FragmentSelectLocationBinding
     private lateinit var map: GoogleMap
+    private lateinit var locationManager: LocationManager
     private lateinit var locationRequest: LocationRequest
     private var snackbar: Snackbar? = null
     private var mapReady = false
     private var permissionsGranted = false
     private var selectedPoi: PointOfInterest? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    }
 
     @SuppressLint("MissingPermission")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -129,6 +137,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             interval = INTERVAL
             fastestInterval = FAST_INTERVAL
         }
+
         LocationServices.getFusedLocationProviderClient(requireContext()).requestLocationUpdates(locationRequest, object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 LocationServices.getFusedLocationProviderClient(requireContext()).removeLocationUpdates(this)
