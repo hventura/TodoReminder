@@ -150,7 +150,15 @@ class SaveReminderFragment : BaseFragment() {
         locationSettingsResponseTask.addOnFailureListener { exception ->
             if (exception is ResolvableApiException && resolve) {
                 try {
-                    // Ok, thanks for the hint:
+                    /* Ok, thanks for the hint: i think i came out a little confused ..
+                       probably because of the name of the function 'onActivityResult' -> so this (the onActivityResult) is always triggered  when there is
+                       any kind of intent expecting a result? like if we ask permissions for CAMERA and expect a photo?
+                       And when we ask for permission on location (FINE_LOCATION, for example) that only triggers the onRequestPermissionsResult()?
+                       I  think  i have mixed concepts here and there is a clear difference between REQUEST CHANGES (Config, or any other) and
+                       REQUEST PERMISSIONS (Manifest.CAMERA, Manifest.ACCESS_FINE_LOCATION, etc..)
+                       Last! for this day on i will not be "anti-Deprecated" :) if they are there it is because they work. although i will change this for
+                       the activity contracts latter on!
+                    */
                     startIntentSenderForResult(
                         exception.resolution.intentSender,
                         REQUEST_TURN_DEVICE_LOCATION_ON,
