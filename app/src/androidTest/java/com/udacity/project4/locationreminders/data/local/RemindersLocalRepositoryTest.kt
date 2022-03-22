@@ -93,7 +93,8 @@ class RemindersLocalRepositoryTest {
 
     @Test
     fun getRemindersList_shouldReturnError() = runBlocking {
-        val shouldBeError = repository.getReminders(true)
+        repository.setReturnError(true)
+        val shouldBeError = repository.getReminders()
         assertThat(shouldBeError is Result.Error, `is`(true))
         shouldBeError as Result.Error
         assertThat(shouldBeError.message, `is`("Error getting Reminders!"))

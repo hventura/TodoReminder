@@ -1,9 +1,10 @@
 package com.udacity.project4.locationreminders.reminderslist
 
 import android.app.Application
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.VisibleForTesting
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -13,9 +14,27 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObjectNotFoundException
+import androidx.test.uiautomator.UiSelector
+import com.udacity.project4.R
+import com.udacity.project4.locationreminders.ReminderDescriptionActivity
+import com.udacity.project4.locationreminders.data.ReminderDataSource
+import com.udacity.project4.locationreminders.data.dto.ReminderDTO
+import com.udacity.project4.locationreminders.data.local.LocalDB
+import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
+import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
+import com.udacity.project4.util.DataBindingIdlingResource
+import com.udacity.project4.util.monitorFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -32,15 +51,7 @@ import org.koin.test.AutoCloseKoinTest
 import org.koin.test.get
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import com.udacity.project4.R
-import com.udacity.project4.locationreminders.data.ReminderDataSource
-import com.udacity.project4.locationreminders.data.dto.ReminderDTO
-import com.udacity.project4.locationreminders.data.dto.asDataItem
-import com.udacity.project4.locationreminders.data.local.LocalDB
-import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
-import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
-import com.udacity.project4.util.DataBindingIdlingResource
-import com.udacity.project4.util.monitorFragment
+import timber.log.Timber
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
@@ -88,6 +99,9 @@ class ReminderListFragmentTest :
         runBlocking {
             repository.deleteAllReminders()
         }
+
+        //start and begin to record Intents
+        Intents.init()
     }
 
     //    DONE: test the navigation of the fragments.
@@ -132,8 +146,10 @@ class ReminderListFragmentTest :
             )
         )
 
-        verify(navController).navigate(ReminderListFragmentDirections.actionReminderListFragmentToReminderDescriptionActivity(reminder1.asDataItem()))
-
+        //verify(navController).navigate(ReminderListFragmentDirections.actionReminderListFragmentToReminderDescriptionActivity(reminder1.asDataItem()))
+        //OK! In spite of being created for the sake of navigation we do not want to test Nav controller but instead
+        // we want to test the launching of the intent!
+        intended(hasComponent(ReminderDescriptionActivity::class.java.name))
     }
 
     //    DONE: add testing for the error messages.
@@ -147,5 +163,7 @@ class ReminderListFragmentTest :
     fun cleanUp() = runTest {
         // As i am always using the same reminder1 values it is best to delete all on starting and ending tests.
         repository.deleteAllReminders()
+        // Clears Intents state.
+        Intents.release()
     }
 }
